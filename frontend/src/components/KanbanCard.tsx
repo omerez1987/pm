@@ -2,6 +2,7 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import clsx from "clsx";
 import type { Card } from "@/lib/kanban";
+import { CardContent } from "@/components/CardContent";
 
 type KanbanCardProps = {
   card: Card;
@@ -26,27 +27,36 @@ export const KanbanCard = ({ card, onDelete }: KanbanCardProps) => {
         "transition-all duration-150",
         isDragging && "opacity-60 shadow-[0_18px_32px_rgba(3,33,71,0.16)]"
       )}
-      {...attributes}
-      {...listeners}
       data-testid={`card-${card.id}`}
     >
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h4 className="font-display text-base font-semibold text-[var(--navy-dark)]">
-            {card.title}
-          </h4>
-          <p className="mt-2 text-sm leading-6 text-[var(--gray-text)]">
-            {card.details}
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => onDelete(card.id)}
-          className="rounded-full border border-transparent px-2 py-1 text-xs font-semibold text-[var(--gray-text)] transition hover:border-[var(--stroke)] hover:text-[var(--navy-dark)]"
-          aria-label={`Delete ${card.title}`}
+      <div className="flex items-start gap-3">
+        <svg
+          {...attributes}
+          {...listeners}
+          data-testid={`drag-handle-${card.id}`}
+          width="10"
+          height="16"
+          viewBox="0 0 10 16"
+          className="mt-0.5 shrink-0 cursor-grab opacity-30 active:cursor-grabbing"
         >
-          Remove
-        </button>
+          <circle cx="3" cy="2"  r="1.5" fill="var(--navy-dark)" />
+          <circle cx="7" cy="2"  r="1.5" fill="var(--navy-dark)" />
+          <circle cx="3" cy="8"  r="1.5" fill="var(--navy-dark)" />
+          <circle cx="7" cy="8"  r="1.5" fill="var(--navy-dark)" />
+          <circle cx="3" cy="14" r="1.5" fill="var(--navy-dark)" />
+          <circle cx="7" cy="14" r="1.5" fill="var(--navy-dark)" />
+        </svg>
+        <div className="flex flex-1 items-start justify-between gap-2">
+          <CardContent card={card} />
+          <button
+            type="button"
+            onClick={() => onDelete(card.id)}
+            className="rounded-full border border-transparent px-2 py-1 text-xs font-semibold text-[var(--gray-text)] transition hover:border-[var(--stroke)] hover:text-[var(--navy-dark)]"
+            aria-label={`Delete ${card.title}`}
+          >
+            Delete
+          </button>
+        </div>
       </div>
     </article>
   );

@@ -1,4 +1,4 @@
-  import { expect, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
 test("loads the kanban board", async ({ page }) => {
   await page.goto("/");
@@ -18,22 +18,22 @@ test("adds a card to a column", async ({ page }) => {
 
 test("moves a card between columns", async ({ page }) => {
   await page.goto("/");
-  const card = page.getByTestId("card-card-1");
+  const dragHandle = page.getByTestId("drag-handle-card-1");
   const targetColumn = page.getByTestId("column-col-review");
-  const cardBox = await card.boundingBox();
+  const handleBox = await dragHandle.boundingBox();
   const columnBox = await targetColumn.boundingBox();
-  if (!cardBox || !columnBox) {
+  if (!handleBox || !columnBox) {
     throw new Error("Unable to resolve drag coordinates.");
   }
 
   await page.mouse.move(
-    cardBox.x + cardBox.width / 2,
-    cardBox.y + cardBox.height / 2
+    handleBox.x + handleBox.width / 2,
+    handleBox.y + handleBox.height / 2
   );
   await page.mouse.down();
   await page.mouse.move(
     columnBox.x + columnBox.width / 2,
-    columnBox.y + 120,
+    columnBox.y + 120, // 120px below column top lands inside the droppable area, above any existing cards
     { steps: 12 }
   );
   await page.mouse.up();
